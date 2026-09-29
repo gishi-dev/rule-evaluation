@@ -1,0 +1,141 @@
+{
+  "contentType": "application/vnd.gorules.decision",
+  "nodes": [
+    {
+      "id": "input",
+      "type": "inputNode",
+      "name": "入力",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "table",
+      "type": "decisionTableNode",
+      "name": "例外条件",
+      "position": {
+        "x": 320,
+        "y": 200
+      },
+      "content": {
+        "hitPolicy": "first",
+        "inputs": [
+          {
+            "id": "in0",
+            "name": "開設からの月数",
+            "type": "expression",
+            "field": "site.months_open"
+          },
+          {
+            "id": "in1",
+            "name": "実績が欠けている月数",
+            "type": "expression",
+            "field": "data.missing_months"
+          },
+          {
+            "id": "in2",
+            "name": "休職の割合",
+            "type": "expression",
+            "field": "manager.leave_ratio"
+          },
+          {
+            "id": "in3",
+            "name": "着任からの月数",
+            "type": "expression",
+            "field": "manager.tenure_months"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "out0",
+            "name": "判定区分",
+            "type": "expression",
+            "field": "result.status"
+          },
+          {
+            "id": "out1",
+            "name": "理由",
+            "type": "expression",
+            "field": "result.reason"
+          }
+        ],
+        "rules": [
+          {
+            "_id": "rule1",
+            "_description": "開設直後の拠点",
+            "in0": "< 6",
+            "in1": "",
+            "in2": "",
+            "in3": "",
+            "out0": "\"参考値\"",
+            "out1": "\"開設から6か月未満のため、評価の対象外（参考値）\""
+          },
+          {
+            "_id": "rule2",
+            "_description": "実績の欠け",
+            "in0": "",
+            "in1": ">= 1",
+            "in2": "",
+            "in3": "",
+            "out0": "\"要確認\"",
+            "out1": "\"実績データに欠けている月があるため、人が確認する\""
+          },
+          {
+            "_id": "rule3",
+            "_description": "長期の休職",
+            "in0": "",
+            "in1": "",
+            "in2": ">= 0.5",
+            "in3": "",
+            "out0": "\"要確認\"",
+            "out1": "\"評価期間の半分以上を休職しているため、人が確認する\""
+          },
+          {
+            "_id": "rule4",
+            "_description": "着任直後",
+            "in0": "",
+            "in1": "",
+            "in2": "",
+            "in3": "< 3",
+            "out0": "\"参考値\"",
+            "out1": "\"着任から3か月未満のため、参考値として扱う\""
+          },
+          {
+            "_id": "rule5",
+            "_description": "通常",
+            "in0": "",
+            "in1": "",
+            "in2": "",
+            "in3": "",
+            "out0": "\"通常\"",
+            "out1": "\"通常の評価ルールを適用\""
+          }
+        ]
+      }
+    },
+    {
+      "id": "output",
+      "type": "outputNode",
+      "name": "出力",
+      "position": {
+        "x": 620,
+        "y": 200
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge1",
+      "type": "edge",
+      "sourceId": "input",
+      "targetId": "table"
+    },
+    {
+      "id": "edge2",
+      "type": "edge",
+      "sourceId": "table",
+      "targetId": "output"
+    }
+  ]
+}

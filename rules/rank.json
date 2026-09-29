@@ -1,0 +1,108 @@
+{
+  "contentType": "application/vnd.gorules.decision",
+  "nodes": [
+    {
+      "id": "input",
+      "type": "inputNode",
+      "name": "入力",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "table",
+      "type": "decisionTableNode",
+      "name": "評価ランク",
+      "position": {
+        "x": 320,
+        "y": 200
+      },
+      "content": {
+        "hitPolicy": "first",
+        "inputs": [
+          {
+            "id": "in0",
+            "name": "総合達成率",
+            "type": "expression",
+            "field": "score.achievement"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "out0",
+            "name": "評価",
+            "type": "expression",
+            "field": "result.rank"
+          },
+          {
+            "id": "out1",
+            "name": "評価点",
+            "type": "expression",
+            "field": "result.points"
+          }
+        ],
+        "rules": [
+          {
+            "_id": "rule1",
+            "_description": "基準を大きく上回る",
+            "in0": ">= 1.05",
+            "out0": "\"S\"",
+            "out1": "5"
+          },
+          {
+            "_id": "rule2",
+            "_description": "基準を上回る",
+            "in0": "[0.98..1.05)",
+            "out0": "\"A\"",
+            "out1": "4"
+          },
+          {
+            "_id": "rule3",
+            "_description": "基準どおり",
+            "in0": "[0.92..0.98)",
+            "out0": "\"B\"",
+            "out1": "3"
+          },
+          {
+            "_id": "rule4",
+            "_description": "基準をやや下回る",
+            "in0": "[0.85..0.92)",
+            "out0": "\"C\"",
+            "out1": "2"
+          },
+          {
+            "_id": "rule5",
+            "_description": "基準を大きく下回る",
+            "in0": "< 0.85",
+            "out0": "\"D\"",
+            "out1": "1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "output",
+      "type": "outputNode",
+      "name": "出力",
+      "position": {
+        "x": 620,
+        "y": 200
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge1",
+      "type": "edge",
+      "sourceId": "input",
+      "targetId": "table"
+    },
+    {
+      "id": "edge2",
+      "type": "edge",
+      "sourceId": "table",
+      "targetId": "output"
+    }
+  ]
+}

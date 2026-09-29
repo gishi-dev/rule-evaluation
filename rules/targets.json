@@ -1,0 +1,112 @@
+{
+  "contentType": "application/vnd.gorules.decision",
+  "nodes": [
+    {
+      "id": "input",
+      "type": "inputNode",
+      "name": "入力",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "table",
+      "type": "decisionTableNode",
+      "name": "対象者の抽出",
+      "position": {
+        "x": 320,
+        "y": 200
+      },
+      "content": {
+        "hitPolicy": "first",
+        "inputs": [
+          {
+            "id": "in0",
+            "name": "判定区分",
+            "type": "expression",
+            "field": "result.status"
+          },
+          {
+            "id": "in1",
+            "name": "6か月平均の評価点",
+            "type": "expression",
+            "field": "summary.avg_points"
+          },
+          {
+            "id": "in2",
+            "name": "直近3か月の最高評価点",
+            "type": "expression",
+            "field": "summary.recent_max_points"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "out0",
+            "name": "抽出区分",
+            "type": "expression",
+            "field": "target.kind"
+          },
+          {
+            "id": "out1",
+            "name": "抽出理由",
+            "type": "expression",
+            "field": "target.reason"
+          }
+        ],
+        "rules": [
+          {
+            "_id": "rule1",
+            "_description": "業務改善報告書",
+            "in0": "\"通常\"",
+            "in1": "< 1.5",
+            "in2": "",
+            "out0": "\"業務改善報告書\"",
+            "out1": "\"6か月平均の評価点が1.5未満\""
+          },
+          {
+            "_id": "rule2",
+            "_description": "再教育",
+            "in0": "\"通常\"",
+            "in1": "",
+            "in2": "<= 2",
+            "out0": "\"再教育\"",
+            "out1": "\"直近3か月の評価がすべてC以下\""
+          },
+          {
+            "_id": "rule3",
+            "_description": "対象外",
+            "in0": "",
+            "in1": "",
+            "in2": "",
+            "out0": "\"対象外\"",
+            "out1": "\"\""
+          }
+        ]
+      }
+    },
+    {
+      "id": "output",
+      "type": "outputNode",
+      "name": "出力",
+      "position": {
+        "x": 620,
+        "y": 200
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge1",
+      "type": "edge",
+      "sourceId": "input",
+      "targetId": "table"
+    },
+    {
+      "id": "edge2",
+      "type": "edge",
+      "sourceId": "table",
+      "targetId": "output"
+    }
+  ]
+}

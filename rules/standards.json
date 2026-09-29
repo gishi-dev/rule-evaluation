@@ -1,0 +1,130 @@
+{
+  "contentType": "application/vnd.gorules.decision",
+  "nodes": [
+    {
+      "id": "input",
+      "type": "inputNode",
+      "name": "入力",
+      "position": {
+        "x": 80,
+        "y": 200
+      }
+    },
+    {
+      "id": "table",
+      "type": "decisionTableNode",
+      "name": "基準値",
+      "position": {
+        "x": 320,
+        "y": 200
+      },
+      "content": {
+        "hitPolicy": "first",
+        "inputs": [
+          {
+            "id": "in0",
+            "name": "拠点種別",
+            "type": "expression",
+            "field": "site.type"
+          },
+          {
+            "id": "in1",
+            "name": "開設からの月数",
+            "type": "expression",
+            "field": "site.months_open"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "out0",
+            "name": "基準稼働率",
+            "type": "expression",
+            "field": "standard.utilization"
+          },
+          {
+            "id": "out1",
+            "name": "基準期日内完了率",
+            "type": "expression",
+            "field": "standard.on_time"
+          },
+          {
+            "id": "out2",
+            "name": "基準満足度",
+            "type": "expression",
+            "field": "standard.satisfaction"
+          }
+        ],
+        "rules": [
+          {
+            "_id": "rule1",
+            "_description": "大型センター（開設1年以上）",
+            "in0": "\"大型センター\"",
+            "in1": ">= 12",
+            "out0": "0.85",
+            "out1": "0.90",
+            "out2": "4.2"
+          },
+          {
+            "_id": "rule2",
+            "_description": "大型センター（開設1年未満）",
+            "in0": "\"大型センター\"",
+            "in1": "< 12",
+            "out0": "0.75",
+            "out1": "0.85",
+            "out2": "4.0"
+          },
+          {
+            "_id": "rule3",
+            "_description": "標準拠点（開設1年以上）",
+            "in0": "\"標準拠点\"",
+            "in1": ">= 12",
+            "out0": "0.80",
+            "out1": "0.90",
+            "out2": "4.2"
+          },
+          {
+            "_id": "rule4",
+            "_description": "標準拠点（開設1年未満）",
+            "in0": "\"標準拠点\"",
+            "in1": "< 12",
+            "out0": "0.70",
+            "out1": "0.85",
+            "out2": "4.0"
+          },
+          {
+            "_id": "rule5",
+            "_description": "サテライト（開設時期によらない）",
+            "in0": "\"サテライト\"",
+            "in1": "",
+            "out0": "0.70",
+            "out1": "0.88",
+            "out2": "4.1"
+          }
+        ]
+      }
+    },
+    {
+      "id": "output",
+      "type": "outputNode",
+      "name": "出力",
+      "position": {
+        "x": 620,
+        "y": 200
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "edge1",
+      "type": "edge",
+      "sourceId": "input",
+      "targetId": "table"
+    },
+    {
+      "id": "edge2",
+      "type": "edge",
+      "sourceId": "table",
+      "targetId": "output"
+    }
+  ]
+}
